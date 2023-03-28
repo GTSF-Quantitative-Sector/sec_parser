@@ -8,7 +8,7 @@ pip install git+https://github.com/GTSF-Quantitative-Sector/sec_parser.git
 
 ## Example Usage
 ```
-from sec import stock, processor
+from sec import stock, processor, constants
 
 aapl = stock.Stock("AAPL")
 
