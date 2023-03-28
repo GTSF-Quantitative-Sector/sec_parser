@@ -10,6 +10,7 @@ setup(
     author_email="lockeadams@gmail.com",
     description=DESCRIPTION,
     packages=["sec"],
+    package_data={"sec": ["data/processed/*", "data/wacc/*", "data/sp500/*"]},
     install_requires=[
         "aiohttp",
         "orjson",

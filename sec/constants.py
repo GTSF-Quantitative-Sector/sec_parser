@@ -1,7 +1,7 @@
 import os
 
 # data directories
-DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
+DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 DOWNLOADED_DATA_DIR = os.path.join(DATA_DIR, "downloaded")
 PROCESSED_DATA_DIR = os.path.join(DATA_DIR, "processed")
 WACC_DATA_DIR = os.path.join(DATA_DIR, "wacc")

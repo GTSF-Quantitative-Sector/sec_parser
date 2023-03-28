@@ -1,5 +1,5 @@
 # downloaded SEC data
-data/downloaded/
+sec/data/downloaded/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
