@@ -60,14 +60,23 @@ class Stock:
         else:
             df = self.financials
         column = f"{metric}_{units}"
-        df = df[df[column].notna()]
-        df = df[df.index <= query_date]
-        df = df[
-            df.index
-            >= (
-                datetime.strptime(query_date, "%Y-%m-%d") - timedelta(weeks=tolerance)
-            ).strftime("%Y-%m-%d")
-        ]
+        try:
+            df = df[df[column].notna()]
+            df = df[df.index <= query_date]
+            df = df[
+                df.index
+                >= (
+                    datetime.strptime(query_date, "%Y-%m-%d")
+                    - timedelta(weeks=tolerance)
+                ).strftime("%Y-%m-%d")
+            ]
+        except:
+            period = "quarterly" if quarterly else "annual"
+            if query_date is None:
+                query_date = "today"
+            raise ValueError(
+                f"Could not find {period} {metric} for {self.ticker} within {tolerance} weeks of {query_date}."
+            )
         if df.empty:
             period = "quarterly" if quarterly else "annual"
             if query_date is None:
@@ -112,37 +121,48 @@ class Stock:
             f"Could not find {period} {concept} for {self.ticker} within {tolerance} weeks of {query_date}."
         )
 
-    async def get_price(
-        ticker: str, query_date: str = None, timeout: int = 20
-    ) -> float:
+    async def get_price(self, query_date: str = None, timeout: int = 20) -> float:
         """
-        Get the price of a stock form Polygon.io.
+        Get the price of a stock from Polygon.io.
 
         Args:
-            ticker (str): Ticker symbol of the stock.
             query_date (str, optional): Date in YYYY-MM-DD format. Defaults to None, which gets the latest metric.
             timeout (int): time to wait before raising TimeoutError.
         Returns:
             float: Price of the stock on the given date.
         """
-        if query_date is None or query_date == date.today().strftime("%Y-%m-%d"):
-            url = f"https://api.polygon.io/v2/aggs/ticker/{ticker}/prev?adjusted=true&apiKey={constants.POLYGON_KEY}"
-            async with aiohttp.ClientSession() as session:
-                try:
-                    async with session.get(url, timeout=timeout) as resp:
-                        response = await resp.json()
-                except concurrent.futures.TimeoutError:
-                    raise TimeoutError(f"{ticker}: Timed out while retrieving price")
 
-            return response["results"][0]["c"]
-        else:
-            url = f"https://api.polygon.io/v1/open-close/{ticker}/{query_date}?adjusted=true&apiKey={constants.POLYGON_KEY}"
+        if constants.POLYGON_KEY is None:
+            raise ValueError(
+                "Polygon.io API key not set. Call constants.set_polygon_key() before using this function."
+            )
+
+        if query_date is None or query_date == date.today().strftime("%Y-%m-%d"):
+            url = f"https://api.polygon.io/v2/aggs/ticker/{self.ticker}/prev?adjusted=true&apiKey={constants.POLYGON_KEY}"
             async with aiohttp.ClientSession() as session:
                 try:
                     async with session.get(url, timeout=timeout) as resp:
                         response = await resp.json()
                 except concurrent.futures.TimeoutError:
-                    raise TimeoutError(f"{ticker}: Timed out while retrieving price")
+                    raise TimeoutError(
+                        f"{self.ticker}: Timed out while retrieving price"
+                    )
+            try:
+                return response["results"][0]["c"]
+            except KeyError:
+                raise ValueError(
+                    f"Could not find price for {self.ticker}. Response: {response}"
+                )
+        else:
+            url = f"https://api.polygon.io/v1/open-close/{self.ticker}/{query_date}?adjusted=true&apiKey={constants.POLYGON_KEY}"
+            async with aiohttp.ClientSession() as session:
+                try:
+                    async with session.get(url, timeout=timeout) as resp:
+                        response = await resp.json()
+                except concurrent.futures.TimeoutError:
+                    raise TimeoutError(
+                        f"{self.ticker}: Timed out while retrieving price"
+                    )
 
                 i = 0
                 while response["status"] != "OK":
@@ -150,51 +170,65 @@ class Stock:
                     # if price not found within 3 days, price likely does not exist for that time period
                     if i >= 2:
                         raise ValueError(
-                            f"Could not find price for {ticker} on {query_date}"
+                            f"Could not find price for {self.ticker} on {query_date}"
                         )
                     i += 1
                     curr_date = datetime.strptime(query_date, "%Y-%m-%d").date()
                     query_date = (curr_date - timedelta(days=1)).strftime("%Y-%m-%d")
-                    url = f"https://api.polygon.io/v1/open-close/{ticker}/{query_date}?adjusted=true&apiKey={constants.POLYGON_KEY}"
+                    url = f"https://api.polygon.io/v1/open-close/{self.ticker}/{query_date}?adjusted=true&apiKey={constants.POLYGON_KEY}"
                     try:
                         async with session.get(url, timeout=timeout) as resp:
                             response = await resp.json()
                     except concurrent.futures.TimeoutError:
                         raise TimeoutError(
-                            f"{ticker}: Timed out while retrieving price"
+                            f"{self.ticker}: Timed out while retrieving price"
                         )
-            return response["close"]
+            try:
+                return response["close"]
+            except KeyError:
+                raise ValueError(
+                    f"Could not find price for {self.ticker} on {query_date}. Response: {response}"
+                )
 
-    async def get_rsi(ticker: str, query_date: str = None, timeout: int = 20) -> float:
+    async def get_rsi(self, query_date: str = None, timeout: int = 20) -> float:
         """
-        Get the RSI of a stock form Polygon.io.
+        Get the RSI of a stock from Polygon.io.
 
         Args:
-            ticker (str): Ticker symbol of the stock.
             query_date (str, optional): Date in YYYY-MM-DD format. Defaults to None, which gets the latest metric.
             timeout (int): time to wait before raising TimeoutError.
 
         Returns:
             float: RSI of the stock on the given date.
         """
-        if query_date is None or query_date == date.today().strftime("%Y-%m-%d"):
-            url = f"https://api.polygon.io/v1/indicators/rsi/{ticker}?timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={constants.POLYGON_KEY}"
-            async with aiohttp.ClientSession() as session:
-                try:
-                    async with session.get(url, timeout=timeout) as resp:
-                        response = await resp.json()
-                except concurrent.futures.TimeoutError:
-                    raise TimeoutError(f"{ticker}: Timed out while retrieving RSI")
 
-            return response["results"]["values"][0]["value"]
-        else:
-            url = f"https://api.polygon.io/v1/indicators/rsi/{ticker}?timestamp={query_date}&timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={constants.POLYGON_KEY}"
+        if constants.POLYGON_KEY is None:
+            raise ValueError(
+                "Polygon.io API key not set. Call constants.set_polygon_key() before using this function."
+            )
+
+        if query_date is None or query_date == date.today().strftime("%Y-%m-%d"):
+            url = f"https://api.polygon.io/v1/indicators/rsi/{self.ticker}?timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={constants.POLYGON_KEY}"
             async with aiohttp.ClientSession() as session:
                 try:
                     async with session.get(url, timeout=timeout) as resp:
                         response = await resp.json()
                 except concurrent.futures.TimeoutError:
-                    raise TimeoutError(f"{ticker}: Timed out while retrieving RSI")
+                    raise TimeoutError(f"{self.ticker}: Timed out while retrieving RSI")
+            try:
+                return response["results"]["values"][0]["value"]
+            except KeyError:
+                raise ValueError(
+                    f"Could not find RSI for {self.ticker}. Response: {response}"
+                )
+        else:
+            url = f"https://api.polygon.io/v1/indicators/rsi/{self.ticker}?timestamp={query_date}&timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={constants.POLYGON_KEY}"
+            async with aiohttp.ClientSession() as session:
+                try:
+                    async with session.get(url, timeout=timeout) as resp:
+                        response = await resp.json()
+                except concurrent.futures.TimeoutError:
+                    raise TimeoutError(f"{self.ticker}: Timed out while retrieving RSI")
 
                 i = 0
                 while response["status"] != "OK" or "values" not in response["results"]:
@@ -202,18 +236,25 @@ class Stock:
                     # if price not found within 3 days, price likely does not exist for that time period
                     if i >= 2:
                         raise ValueError(
-                            f"Could not find price for {ticker} on {query_date}"
+                            f"Could not find price for {self.ticker} on {query_date}"
                         )
                     i += 1
                     curr_date = datetime.strptime(query_date, "%Y-%m-%d").date()
                     query_date = (curr_date - timedelta(days=1)).strftime("%Y-%m-%d")
-                    url = f"https://api.polygon.io/v1/indicators/rsi/{ticker}?timestamp={query_date}&timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={constants.POLYGON_KEY}"
+                    url = f"https://api.polygon.io/v1/indicators/rsi/{self.ticker}?timestamp={query_date}&timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={constants.POLYGON_KEY}"
                     try:
                         async with session.get(url, timeout=timeout) as resp:
                             response = await resp.json()
                     except concurrent.futures.TimeoutError:
-                        raise TimeoutError(f"{ticker}: Timed out while retrieving RSI")
-            return response["results"]["values"][0]["value"]
+                        raise TimeoutError(
+                            f"{self.ticker}: Timed out while retrieving RSI"
+                        )
+            try:
+                return response["results"]["values"][0]["value"]
+            except KeyError:
+                raise ValueError(
+                    f"Could not find RSI for {self.ticker} on {query_date}. Response: {response}"
+                )
 
     # TODO: calculate WACC per company instead of using industry averages
     def get_wacc(self, query_date: str = None) -> float:

@@ -9,3 +9,17 @@ SP500_DATA_DIR = os.path.join(DATA_DIR, "sp500")
 
 # requests headers
 HEADING = {"User-Agent": "locke@gatech.edu"}
+
+# Polygon.io API key
+POLYGON_KEY = None
+
+
+def set_polygon_key(key: str) -> None:
+    """
+    Set the Polygon.io API key.
+
+    Args:
+        key (str): Polygon.io API key.
+    """
+    global POLYGON_KEY
+    POLYGON_KEY = key

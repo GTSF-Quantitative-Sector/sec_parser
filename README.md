@@ -21,7 +21,8 @@ aapl.get_accounts_payable(quarterly=True)
 # get earnings per share from most recent filing before 2019-01-01, including quarterly filings
 aapl.get_earnings_per_share(query_date="2019-01-01", quarterly=True)
 
-# get price on 2013-08-11
+# get price on 2013-08-11. note that you must first set the Polygon API key for any functions involving price or RSI data
+constants.set_polygon_key("YOUR_KEY_HERE")
 await aapl.get_price(query_date="2013-08-11")
 
 # download most recent SEC data
