@@ -1,9 +1,11 @@
 import os
-import orjson
-import requests
-from sec import constants, lookups
 import zipfile
+
+import orjson
 import pandas as pd
+import requests
+
+from sec import constants, lookups
 
 os.makedirs(constants.DATA_DIR, exist_ok=True)
 os.makedirs(constants.DOWNLOADED_DATA_DIR, exist_ok=True)

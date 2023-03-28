@@ -1,7 +1,9 @@
+import os
+
 import pandas as pd
 import requests
+
 from sec import constants
-import os
 
 
 def _get_cik_lookup() -> pd.DataFrame:

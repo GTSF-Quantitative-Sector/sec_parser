@@ -1,10 +1,12 @@
-from sec import constants, lookups
-import os
-import pandas as pd
-from datetime import datetime, timedelta, date
-from dateutil import relativedelta
 import concurrent.futures
+import os
+from datetime import date, datetime, timedelta
+
 import aiohttp
+import pandas as pd
+from dateutil import relativedelta
+
+from sec import constants, lookups
 
 
 class Stock:
