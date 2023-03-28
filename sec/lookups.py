@@ -51,7 +51,7 @@ _industry_lookup = _get_industry_lookup()
 _sp500_lookup = _get_sp500_lookup()
 
 
-def get_cik(ticker) -> str:
+def get_cik(ticker: str) -> str:
     """
     Get the CIK number for a given ticker.
 
@@ -64,7 +64,7 @@ def get_cik(ticker) -> str:
     return str(_cik_lookup.loc[ticker, "cik_str"]).zfill(10)
 
 
-def get_industry(ticker) -> str:
+def get_industry(ticker: str) -> str:
     """
     Get the industry of a given ticker for use with WACC data.
 
@@ -77,7 +77,7 @@ def get_industry(ticker) -> str:
     return _industry_lookup.loc[ticker, "industry"]
 
 
-def get_sp500_tickers(query_date: str) -> list:
+def get_sp500_tickers(query_date: str = None) -> list:
     """Get a list of tickers for all stocks in the S&P 500 on a given date.
 
     Args:
