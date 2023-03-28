@@ -1560,8 +1560,8 @@ class Stock:
         Get the price to book ratio for a company.
 
         Args:
-            query_date (str, optional): The date to get the metric for in Y-m-d format. Defaults to None, which gets the latest metric.
-            quarterly (bool, optional): Whether to get the quarterly metric. Defaults to False.
+            query_date (str, optional): Date in YYYY-MM-DD format. Defaults to None, which gets the latest metric.
+            quarterly (bool, optional): Whether to consider quarterly values. Defaults to False, which only searches for annual values.
             tolerance (int, optional): The max number of weeks to look back for a filing date. Defaults to 52.
 
         Returns:
@@ -1578,8 +1578,8 @@ class Stock:
         Get the price to earnings ratio for a company.
 
         Args:
-            query_date (str, optional): The date to get the metric for in Y-m-d format. Defaults to None, which gets the latest metric.
-            quarterly (bool, optional): Whether to get the quarterly metric. Defaults to False.
+            query_date (str, optional): Date in YYYY-MM-DD format. Defaults to None, which gets the latest metric.
+            quarterly (bool, optional): Whether to consider quarterly values. Defaults to False, which only searches for annual values.
             tolerance (int, optional): The max number of weeks to look back for a filing date. Defaults to 52.
 
         Returns:
@@ -1596,8 +1596,8 @@ class Stock:
         Get the price to sales ratio for a company.
 
         Args:
-            query_date (str, optional): The date to get the metric for in Y-m-d format. Defaults to None, which gets the latest metric.
-            quarterly (bool, optional): Whether to get the quarterly metric. Defaults to False.
+            query_date (str, optional): Date in YYYY-MM-DD format. Defaults to None, which gets the latest metric.
+            quarterly (bool, optional): Whether to consider quarterly values. Defaults to False, which only searches for annual values.
             tolerance (int, optional): The max number of weeks to look back for a filing date. Defaults to 52.
 
         Returns:
@@ -1614,8 +1614,8 @@ class Stock:
         Get the price to cash flow ratio for a company.
 
         Args:
-            query_date (str, optional): The date to get the metric for in Y-m-d format. Defaults to None, which gets the latest metric.
-            quarterly (bool, optional): Whether to get the quarterly metric. Defaults to False.
+            query_date (str, optional): Date in YYYY-MM-DD format. Defaults to None, which gets the latest metric.
+            quarterly (bool, optional): Whether to consider quarterly values. Defaults to False, which only searches for annual values.
             tolerance (int, optional): The max number of weeks to look back for a filing date. Defaults to 52.
 
         Returns:
@@ -1632,8 +1632,8 @@ class Stock:
         Get the market cap for a company.
 
         Args:
-            query_date (str, optional): The date to get the metric for in Y-m-d format. Defaults to None, which gets the latest metric.
-            quarterly (bool, optional): Whether to get the quarterly metric. Defaults to False.
+            query_date (str, optional): Date in YYYY-MM-DD format. Defaults to None, which gets the latest metric.
+            quarterly (bool, optional): Whether to consider quarterly values. Defaults to False, which only searches for annual values.
             tolerance (int, optional): The max number of weeks to look back for a filing date. Defaults to 52.
 
         Returns:
@@ -1650,8 +1650,8 @@ class Stock:
         Get the enterprise value for a company.
 
         Args:
-            query_date (str, optional): The date to get the metric for in Y-m-d format. Defaults to None, which gets the latest metric.
-            quarterly (bool, optional): Whether to get the quarterly metric. Defaults to False.
+            query_date (str, optional): Date in YYYY-MM-DD format. Defaults to None, which gets the latest metric.
+            quarterly (bool, optional): Whether to consider quarterly values. Defaults to False, which only searches for annual values.
             tolerance (int, optional): The max number of weeks to look back for a filing date. Defaults to 52.
 
         Returns:
@@ -1670,8 +1670,8 @@ class Stock:
         Get the enterprise value to ebitda ratio for a company.
 
         Args:
-            query_date (str, optional): The date to get the metric for in Y-m-d format. Defaults to None, which gets the latest metric.
-            quarterly (bool, optional): Whether to get the quarterly metric. Defaults to False.
+            query_date (str, optional): Date in YYYY-MM-DD format. Defaults to None, which gets the latest metric.
+            quarterly (bool, optional): Whether to consider quarterly values. Defaults to False, which only searches for annual values.
             tolerance (int, optional): The max number of weeks to look back for a filing date. Defaults to 52.
 
         Returns:
@@ -1688,8 +1688,8 @@ class Stock:
         Get the shareholder yield for a company.
 
         Args:
-            query_date (str, optional): The date to get the metric for in Y-m-d format. Defaults to None, which gets the latest metric.
-            quarterly (bool, optional): Whether to get the quarterly metric. Defaults to False.
+            query_date (str, optional): Date in YYYY-MM-DD format. Defaults to None, which gets the latest metric.
+            quarterly (bool, optional): Whether to consider quarterly values. Defaults to False, which only searches for annual values.
             tolerance (int, optional): The max number of weeks to look back for a filing date. Defaults to 52.
 
         Returns:
@@ -1733,8 +1733,8 @@ class Stock:
         Get the VC2 metrics for a company. More efficient than calling each one individually.
 
         Args:
-            query_date (str, optional): The date to get the metric for in Y-m-d format. Defaults to None, which gets the latest metric.
-            quarterly (bool, optional): Whether to get the quarterly metric. Defaults to False.
+            query_date (str, optional): Date in YYYY-MM-DD format. Defaults to None, which gets the latest metric.
+            quarterly (bool, optional): Whether to consider quarterly values. Defaults to False, which only searches for annual values.
             tolerance (int, optional): The max number of weeks to look back for a filing date. Defaults to 52.
 
         Returns:
