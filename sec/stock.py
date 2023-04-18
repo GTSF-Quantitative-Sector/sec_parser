@@ -12,8 +12,12 @@ from sec import constants, lookups
 class Stock:
     def __init__(self, ticker) -> None:
         self.ticker = ticker
-        self.financials = self.get_financials()
-        self.industry = lookups.get_industry(ticker)
+        if ticker != "SPY":
+            self.financials = self.get_financials()
+            self.industry = lookups.get_industry(ticker)
+        else:  # SPY is a special case where we only want price data
+            self.financials = None
+            self.industry = None
 
     def get_financials(self) -> pd.DataFrame:
         """
