@@ -170,9 +170,8 @@ class Stock:
 
                 i = 0
                 while response["status"] != "OK":
-                    # markets will not close for more than 3 days at a time
-                    # if price not found within 3 days, price likely does not exist for that time period
-                    if i >= 2:
+                    # if price not found within 7 days, price likely does not exist for that time period
+                    if i >= 6:
                         raise ValueError(
                             f"Could not find price for {self.ticker} on {query_date}"
                         )
@@ -236,9 +235,8 @@ class Stock:
 
                 i = 0
                 while response["status"] != "OK" or "values" not in response["results"]:
-                    # markets will not close for more than 3 days at a time
-                    # if price not found within 3 days, price likely does not exist for that time period
-                    if i >= 2:
+                    # if price not found within 7 days, price likely does not exist for that time period
+                    if i >= 6:
                         raise ValueError(
                             f"Could not find price for {self.ticker} on {query_date}"
                         )
