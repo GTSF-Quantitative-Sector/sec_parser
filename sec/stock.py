@@ -3,6 +3,7 @@ import os
 from datetime import date, datetime, timedelta
 
 import aiohttp
+from aiohttp import TCPConnector
 import pandas as pd
 from dateutil import relativedelta
 
@@ -143,7 +144,7 @@ class Stock:
 
         if query_date is None or query_date == date.today().strftime("%Y-%m-%d"):
             url = f"https://api.polygon.io/v2/aggs/ticker/{self.ticker}/prev?adjusted=true&apiKey={constants.POLYGON_KEY}"
-            async with aiohttp.ClientSession() as session:
+            async with aiohttp.ClientSession(connector=TCPConnector(ssl=False)) as session:
                 try:
                     async with session.get(url, timeout=timeout) as resp:
                         response = await resp.json()
@@ -159,7 +160,7 @@ class Stock:
                 )
         else:
             url = f"https://api.polygon.io/v1/open-close/{self.ticker}/{query_date}?adjusted=true&apiKey={constants.POLYGON_KEY}"
-            async with aiohttp.ClientSession() as session:
+            async with aiohttp.ClientSession(connector=TCPConnector(ssl=False)) as session:
                 try:
                     async with session.get(url, timeout=timeout) as resp:
                         response = await resp.json()
@@ -212,7 +213,7 @@ class Stock:
 
         if query_date is None or query_date == date.today().strftime("%Y-%m-%d"):
             url = f"https://api.polygon.io/v1/indicators/rsi/{self.ticker}?timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={constants.POLYGON_KEY}"
-            async with aiohttp.ClientSession() as session:
+            async with aiohttp.ClientSession(connector=TCPConnector(ssl=False)) as session:
                 try:
                     async with session.get(url, timeout=timeout) as resp:
                         response = await resp.json()
@@ -226,7 +227,7 @@ class Stock:
                 )
         else:
             url = f"https://api.polygon.io/v1/indicators/rsi/{self.ticker}?timestamp={query_date}&timespan=day&adjusted=true&window=14&series_type=close&order=desc&apiKey={constants.POLYGON_KEY}"
-            async with aiohttp.ClientSession() as session:
+            async with aiohttp.ClientSession(connector=TCPConnector(ssl=False)) as session:
                 try:
                     async with session.get(url, timeout=timeout) as resp:
                         response = await resp.json()
