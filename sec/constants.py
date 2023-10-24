@@ -6,6 +6,7 @@ DOWNLOADED_DATA_DIR = os.path.join(DATA_DIR, "downloaded")
 PROCESSED_DATA_DIR = os.path.join(DATA_DIR, "processed")
 WACC_DATA_DIR = os.path.join(DATA_DIR, "wacc")
 SP500_DATA_DIR = os.path.join(DATA_DIR, "sp500")
+CIK_DATA_DIR = os.path.join(DATA_DIR, "cik")
 
 # requests headers
 HEADING = {"User-Agent": "locke@gatech.edu"}

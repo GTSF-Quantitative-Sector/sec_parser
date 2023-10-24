@@ -1,7 +1,6 @@
 import os
 
 import pandas as pd
-import requests
 
 from sec import constants
 
@@ -13,9 +12,9 @@ def _get_cik_lookup() -> pd.DataFrame:
     Returns:
         pd.DataFrame: DataFrame of CIK numbers and tickers.
     """
-    url = "https://www.sec.gov/files/company_tickers.json"
-    r = requests.get(url, headers=constants.HEADING)
-    lookup = pd.DataFrame(r.json()).T
+    lookup = pd.read_json(
+        os.path.join(constants.CIK_DATA_DIR, "company_tickers.json"), orient="index"
+    )
     lookup.set_index("ticker", inplace=True)
     return lookup
 
