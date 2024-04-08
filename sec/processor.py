@@ -12,12 +12,12 @@ os.makedirs(constants.DOWNLOADED_DATA_DIR, exist_ok=True)
 os.makedirs(constants.PROCESSED_DATA_DIR, exist_ok=True)
 
 
-def download_sec_data(force_update: bool = False) -> None:
+def download_sec_data(force_update: bool = True) -> None:
     """
     Download all company facts from SEC.
 
     Args:
-        force_update (bool, optional): If True, download updated data regardless of whether it already exists. Defaults to False.
+        force_update (bool, optional): If True, download SEC bulk data regardless of whether it already exists. Defaults to True.
     """
     # if data/companyfacts.zip does not exist, download it
     if force_update or not os.path.exists(
