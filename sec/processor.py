@@ -12,17 +12,26 @@ os.makedirs(constants.DOWNLOADED_DATA_DIR, exist_ok=True)
 os.makedirs(constants.PROCESSED_DATA_DIR, exist_ok=True)
 
 
-def download_sec_data(force_update: bool = True) -> None:
+def download_sec_data(force_update: bool = True, max_stale_days: int = 30) -> None:
     """
     Download all company facts from SEC.
 
     Args:
-        force_update (bool, optional): If True, download SEC bulk data regardless of whether it already exists. Defaults to True.
+        force_update (bool, optional): If True, download SEC bulk data regardless of whether it already exists/ if it is stale. Defaults to False. (kept for backwards compatibility)
+        max_stale_days (int, optional): Maximum number of days to keep SEC bulk data before updating. Defaults to 30. Can be overwritten by force_update.
     """
-    # if data/companyfacts.zip does not exist, download it
-    if force_update or not os.path.exists(
-        os.path.join(constants.DOWNLOADED_DATA_DIR, "companyfacts.zip")
-    ):
+
+    # force download if previous zip is stale or zip does not exist
+    if os.path.exists(os.path.join(constants.DOWNLOADED_DATA_DIR, "last_update.txt")):
+        with open(os.path.join(constants.DOWNLOADED_DATA_DIR, "last_update.txt")) as f:
+            last_update = pd.to_datetime(f.read())
+        if (pd.Timestamp.now() - last_update).days > max_stale_days:
+            force_update = True
+    else:
+        force_update = True
+
+    # download and unzip companyfacts.zip, then save last_update.txt
+    if force_update:
         print("Downloading companyfacts.zip...")
         url = "https://www.sec.gov/Archives/edgar/daily-index/xbrl/companyfacts.zip"
         r = requests.get(url, headers=constants.HEADING)
@@ -30,15 +39,15 @@ def download_sec_data(force_update: bool = True) -> None:
             os.path.join(constants.DOWNLOADED_DATA_DIR, "companyfacts.zip"), "wb"
         ) as f:
             f.write(r.content)
-    # if JSON files do not exist, unzip them
-    if force_update or not os.path.exists(
-        os.path.join(constants.DOWNLOADED_DATA_DIR, "CIK000032019.json")
-    ):
         print("Unzipping companyfacts.zip...")
         with zipfile.ZipFile(
             os.path.join(constants.DOWNLOADED_DATA_DIR, "companyfacts.zip"), "r"
         ) as zip_ref:
             zip_ref.extractall(constants.DOWNLOADED_DATA_DIR)
+        with open(os.path.join(constants.DOWNLOADED_DATA_DIR, "last_update.txt"), "w") as f:
+            f.write(pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S"))
+    else:
+        print("Data not stale. Skipping download. To override, set force_update=True or change max_stale_days.")
 
 
 def process_sec_json(ticker: str) -> None:
