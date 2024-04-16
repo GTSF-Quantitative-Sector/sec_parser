@@ -12,7 +12,7 @@ os.makedirs(constants.DOWNLOADED_DATA_DIR, exist_ok=True)
 os.makedirs(constants.PROCESSED_DATA_DIR, exist_ok=True)
 
 
-def download_sec_data(force_update: bool = True, max_stale_days: int = 30) -> None:
+def download_sec_data(force_update: bool = False, max_stale_days: int = 30) -> None:
     """
     Download all company facts from SEC.
 
