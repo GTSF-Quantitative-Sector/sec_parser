@@ -1,6 +1,6 @@
 from setuptools import setup
 
-VERSION = "1.9"
+VERSION = "1.91"
 DESCRIPTION = "Engine to parse SEC EDGAR data."
 
 setup(
