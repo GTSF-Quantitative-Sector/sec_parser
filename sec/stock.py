@@ -128,7 +128,7 @@ class Stock:
 
     async def get_price(self, query_date: str = None, timeout: int = 20) -> float:
         """
-        Get the price of a stock from Polygon.io.
+        Get the price of a stock from Polygon.io. If price cannot be found on the given date, the function will search backwards up to 7 days.
 
         Args:
             query_date (str, optional): Date in YYYY-MM-DD format. Defaults to None, which gets the latest metric.
@@ -189,6 +189,78 @@ class Stock:
                         )
             try:
                 return response["close"]
+            except KeyError:
+                raise ValueError(
+                    f"Could not find price for {self.ticker} on {query_date}. Response: {response}"
+                )
+    
+    async def get_aggs(self, query_date: str = None, timeout: int = 20) -> dict:
+        """
+        Gets the OHLCV data for a stock on a particular day from Polygon.io.
+
+        Args:
+            query_date (str, optional): Date in YYYY-MM-DD format. Defaults to None, which gets the latest metric.
+            timeout (int): time to wait before raising TimeoutError.
+
+        Returns:
+            dict: OHLCV data for the stock on the given date. If data is not found for the given date, returns an empty dictionary.
+        """
+
+        if constants.POLYGON_KEY is None:
+            raise ValueError(
+                "Polygon.io API key not set. Call constants.set_polygon_key() before using this function."
+            )
+
+        if query_date is None or query_date == date.today().strftime("%Y-%m-%d"):
+            url = f"https://api.polygon.io/v2/aggs/ticker/{self.ticker}/prev?adjusted=true&apiKey={constants.POLYGON_KEY}"
+            async with aiohttp.ClientSession(connector=TCPConnector(ssl=False)) as session:
+                try:
+                    async with session.get(url, timeout=timeout) as resp:
+                        response = await resp.json()
+                except concurrent.futures.TimeoutError:
+                    raise TimeoutError(
+                        f"{self.ticker}: Timed out while retrieving price"
+                    )
+            try:
+                open = response["results"][0]["o"]
+                high = response["results"][0]["h"]
+                low = response["results"][0]["l"]
+                close = response["results"][0]["c"]
+                volume = response["results"][0]["v"]
+                return {
+                    "open": open,
+                    "high": high,
+                    "low": low,
+                    "close": close,
+                    "volume": volume,
+                }
+            except KeyError:
+                raise ValueError(
+                    f"Could not find aggs for {self.ticker}. Response: {response}"
+                )
+        else:
+            url = f"https://api.polygon.io/v1/open-close/{self.ticker}/{query_date}?adjusted=true&apiKey={constants.POLYGON_KEY}"
+            async with aiohttp.ClientSession(connector=TCPConnector(ssl=False)) as session:
+                try:
+                    async with session.get(url, timeout=timeout) as resp:
+                        response = await resp.json()
+                except concurrent.futures.TimeoutError:
+                    raise TimeoutError(
+                        f"{self.ticker}: Timed out while retrieving price"
+                    )
+            try:
+                open = response["open"]
+                high = response["high"]
+                low = response["low"]
+                close = response["close"]
+                volume = response["volume"]
+                return {
+                    "open": open,
+                    "high": high,
+                    "low": low,
+                    "close": close,
+                    "volume": volume,
+                }
             except KeyError:
                 raise ValueError(
                     f"Could not find price for {self.ticker} on {query_date}. Response: {response}"
