@@ -69,3 +69,5 @@ Though new financials data from the SEC can be retrieved programatically (as sho
 [WACC Data](sec/data/wacc/README.md): To be completed at the beginning of every year.
 
 [S&P500 Data](sec/data/sp500/README.md): To be completed monthly.
+
+Any time you make changes to the library, you **must update the version number** in `setup.py`. Then, update or reinstall the package with `pip`. If the version number is not changed, `pip` will not update the library.
