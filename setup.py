@@ -1,6 +1,6 @@
 from setuptools import setup
 
-VERSION = "1.91"
+VERSION = "1.92"
 DESCRIPTION = "Engine to parse SEC EDGAR data."
 
 setup(
@@ -10,7 +10,8 @@ setup(
     author_email="lockeadams@gmail.com",
     description=DESCRIPTION,
     packages=["sec"],
-    package_data={"sec": ["data/processed/*", "data/wacc/*", "data/sp500/*", "data/cik/*"]},
+    package_data={"sec": ["data/processed/*",
+                          "data/wacc/*", "data/sp500/*", "data/cik/*"]},
     install_requires=[
         "aiohttp",
         "orjson",
