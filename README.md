@@ -44,7 +44,7 @@ lookups.get_sp500_tickers()
 lookups.get_sp500_tickers(query_date="2019-01-01")
 ```
 
-Retrieve and process most recent SEC data. Note that data for most stocks is already processed and included in the package, so this is only necessary if you want to get data for a stock that is not included.
+Retrieve and process most recent SEC data.
 ```python
 from sec import processor
 
@@ -52,7 +52,20 @@ from sec import processor
 # this will take a while and takes up a lot of space on disk
 processor.download_sec_data()
 
-# format SEC data for AAPL
-# required for data retrieval functions in stock.Stock
+# if data that is currently downloaded is less than 30 days old, do nothing
+# if data has not been downloaded yet or is more than 30 days old, download most recent data
+# helpful to put at top of any strategies using this library to ensure data is up to date
+processor.download_sec_data(max_stale_days=30)
+
+# after the raw data is downloaded, it must be processed before it can be used via data retrieval functions in stock.Stock
+# call this for every company that you would like to access data for (e.g. every company in the S&P500)
+# this function only needs to be called once after downloading new data (above)
 processor.process_sec_json("AAPL")
 ```
+
+## Maintenance
+Though new financials data from the SEC can be retrieved programatically (as shown above), there are two components of this library that require manual maintenance: the WACC data and list of S&P500 companies. Links to instructions for how to maintain these data sources are below:
+
+[WACC Data](sec/data/wacc/README.md): To be completed at the beginning of every year.
+
+[S&P500 Data](sec/data/sp500/README.md): To be completed monthly.

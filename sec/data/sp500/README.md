@@ -1,3 +1,9 @@
-data source: [https://github.com/fja05680/sp500/blob/master/S%26P 500 Historical Components %26 Changes(12-29-2022).csv](https://github.com/fja05680/sp500/blob/master/S%26P%20500%20Historical%20Components%20%26%20Changes(04-08-2024).csv)
+The steps below should be completed monthly.
 
-last updated: 2024-04-08
+### S&P500 data source
+link: https://github.com/fja05680/sp500
+
+From this repository, download the latest `S&P 500 Historical Components & Changes(MM-DD-YYYY).csv` file. Name this file sp500_historical.csv and replace the file currently stored in this directory.
+
+### Date of last data update
+2025-01-28. The date on the file in the repo above is "12-10-2024"
