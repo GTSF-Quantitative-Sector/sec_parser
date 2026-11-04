@@ -34,6 +34,11 @@ def main():
     assert mapping.ne("").all().all()
     assert lookups.get_industry("NA") == "Semiconductor"
     members = lookups.get_sp500_tickers(query_date=args.date)
+    for ticker in members:
+        try:
+            lookups.get_cik(ticker)
+        except KeyError as error:
+            raise SystemExit(f"Missing SEC issuer mapping for {ticker}") from error
     failures = []
     for year in ("2025", "2026"):
         table = pd.read_csv(Path(constants.WACC_DATA_DIR) / f"{year}.csv")

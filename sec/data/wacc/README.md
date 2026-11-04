@@ -44,7 +44,7 @@ The following are maintainer classifications based on the companies' described b
 
 ### Reproduce validation
 
-After installing the checkout, run `python scripts/validate_maintenance.py` from the repository root. This checks history ordering and duplicate keys, decimal WACC values, and `Stock.get_wacc()` for every latest-source constituent in both 2025 and 2026. The WACC-only check bypasses the constructor's unrelated financial-data load; a separate check exercises the full constructor where financial files exist and reports missing SEC files. Refreshing SEC financials is separate from these maintenance datasets.
+After installing the checkout, run `python scripts/validate_maintenance.py` from the repository root. This checks history ordering and duplicate keys, coverage in the [packaged SEC issuer lookup](../cik/README.md), decimal WACC values, and `Stock.get_wacc()` for every latest-source constituent in both 2025 and 2026. The WACC-only check bypasses the constructor's unrelated financial-data load; a separate check exercises the full constructor where financial files exist and reports missing SEC files. Refreshing SEC financials is separate from these maintenance datasets. A successful constructor check confirms the file loads, so check its latest filing date before use.
 
 Validation on 2026-11-04 passed WACC lookups for all 503 latest-source tickers in both annual files. Full construction and WACC lookup passed for 455 tickers; 48 lack packaged SEC financial files and require a separate financial-data refresh before normal `Stock(ticker)` use.
 
