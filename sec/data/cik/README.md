@@ -10,6 +10,8 @@ Corrected `BNY` to Bank of New York Mellon. Its NYSE ticker changed from `BK`,
 which remains an alias. The previous `BNY` entry referred to a BlackRock municipal
 income trust and must not be used to process Bank of New York Mellon filings.
 Added eleven missing mappings for the August 18 membership snapshot.
+Corrected `FERG` to Ferguson Enterprises, which succeeded Ferguson plc as the
+public issuer on August 1, 2024 and retained the ticker.
 
 | Ticker | CIK | SEC source |
 | --- | --- | --- |
@@ -17,6 +19,7 @@ Added eleven missing mappings for the August 18 membership snapshot.
 | ECHO | 0001415404 | [EchoStar](https://www.sec.gov/edgar/browse/?CIK=1415404) |
 | EXE | 0000895126 | [Expand Energy](https://www.sec.gov/Archives/edgar/data/895126/000110465926108003/0001104659-26-108003-index.htm) |
 | FDXF | 0002082247 | [FedEx Freight](https://www.sec.gov/Archives/edgar/data/2082247/000162828026068246/fdxf-20260930.htm) |
+| FERG | 0002011641 | [Ferguson Enterprises](https://www.sec.gov/Archives/edgar/data/2011641/000201164124000005/ferg-20240731.htm) |
 | FISV | 0000798354 | [Fiserv](https://www.sec.gov/Archives/edgar/data/798354/000079835426000031/0000798354-26-000031-index.htm) |
 | HONA | 0002089271 | [Honeywell Aerospace](https://www.sec.gov/edgar/browse/?CIK=2089271) |
 | MRSH | 0000062709 | [Marsh](https://www.sec.gov/Archives/edgar/data/62709/000087666126000867/0000876661-26-000867-index.htm) |
