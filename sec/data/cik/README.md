@@ -28,3 +28,10 @@ public issuer on August 1, 2024 and retained the ticker.
 | SNDK | 0002023554 | [Sandisk](https://www.sec.gov/edgar/browse/index.html?cik=2023554) |
 | VMRK | 0000906107 | [Vivmark Residential](https://www.sec.gov/edgar/browse/index.html?cik=906107) |
 | XYZ | 0001512673 | [Block](https://www.sec.gov/Archives/edgar/data/1512673/000162828026069513/0001628280-26-069513-index.htm) |
+
+The revised historical snapshots also need the following mappings:
+
+| Ticker | CIK | SEC source |
+| --- | --- | --- |
+| RE | 0001095073 | [Everest Group](https://www.sec.gov/Archives/edgar/data/1095073/000109507324000009/eg-20231231.htm), now trading as `EG` |
+| SOLS | 0002064953 | [Solstice Advanced Materials](https://www.sec.gov/edgar/browse/?CIK=2064953&owner=exclude) |
