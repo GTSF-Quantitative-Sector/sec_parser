@@ -27,7 +27,9 @@ def _get_industry_lookup() -> pd.DataFrame:
         pd.DataFrame: DataFrame of industries and tickers.
     """
     return pd.read_csv(
-        os.path.join(constants.WACC_DATA_DIR, "industries.csv"), index_col=0
+        os.path.join(constants.WACC_DATA_DIR, "industries.csv"),
+        index_col=0,
+        keep_default_na=False,  # NA is a valid ticker (Nano Labs), not a null key.
     )
 
 
